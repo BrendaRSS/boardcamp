@@ -11,3 +11,10 @@ export const gameSechema = joi.object({
     categoryId: joi.number().positive().required(),
     pricePerDay: joi.string().min(1).required()
 })
+
+export const customerSchema = joi.object({
+    name: joi.string().min(3).required(),
+    phone: joi.string().min(10).max(11).required(),
+    cpf: joi.string().min(11).max(11).required(),
+    birthday: joi.string().required()
+})

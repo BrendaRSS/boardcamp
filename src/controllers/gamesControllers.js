@@ -2,8 +2,17 @@ import { connection } from "../database/database.js";
 import {gameSechema} from "../schemas/validations.js";
 
 export async function getGames(req, res){
+    const {name} = req.query;
+    console.log(name)
+    // const nameCaseInsensitive = name[0].toUpperCase()+name.substring(1).toLowerCase();
+    // console.log(nameCaseInsensitive);
+
     try{
-        const AllGames = await connection.query('SELECT * FROM games;');
+        if(name){
+            const gamesQuerys= await connection.query("SELECT * FROM games WHERE name LIKE CONCAT ($1::text,'%');", [name]);
+            return res.status(201).send(gamesQuerys.rows);
+        }
+        const AllGames = await connection.query("SELECT * FROM games;");
         res.status(201).send(AllGames.rows);
     } catch(error){
         console.log(error);
