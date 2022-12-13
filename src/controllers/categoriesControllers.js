@@ -18,10 +18,14 @@ export async function postCategories(req, res){
 
     if(error){
        const errors = error.details.map((detail)=> detail.message);
-       return res.status(422).send(errors);
+       return res.status(400).send(errors);
     }
     
     try{
+        const categoryExist = await connection.query(`SELECT * FROM categories WHERE name = $1`, [bodyCategorie.name]);
+        if(categoryExist.rows.length>0){
+            return res.sendStatus(409);
+        }
         await connection.query('INSERT INTO categories (name) VALUES ($1)', [bodyCategorie.name]);
         res.sendStatus(201);
     }catch (error){

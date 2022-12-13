@@ -9,10 +9,10 @@ export async function getGames(req, res){
 
     try{
         if(name){
-            const gamesQuerys= await connection.query("SELECT * FROM games WHERE name LIKE CONCAT ($1::text,'%');", [name]);
+            const gamesQuerys= await connection.query(`SELECT games.*, categories.name AS "categoryName" FROM games JOIN categories ON games."categoryId" = categories.id WHERE UPPER(games.name) LIKE CONCAT (UPPER($1::text),'%');`, [name.toUpperCase()]);
             return res.status(201).send(gamesQuerys.rows);
         }
-        const AllGames = await connection.query("SELECT * FROM games;");
+        const AllGames = await connection.query(`SELECT games.id, games.name, games.image, games."stockTotal", games."categoryId", games."pricePerDay", categories.name AS "categoryName" FROM games JOIN categories ON games."categoryId" = categories.id`);
         res.status(201).send(AllGames.rows);
     } catch(error){
         console.log(error);
