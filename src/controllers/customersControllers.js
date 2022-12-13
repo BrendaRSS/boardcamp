@@ -57,7 +57,7 @@ export async function postCustomers(req, res){
 export async function putCustomers(req, res){
     const {id}=req.params;
     const body= req.body;
-    console.log(body)
+    // console.log(body)
 
     const {error} = customerSchema.validate(body, {abortEarly: false});
     if(error){
